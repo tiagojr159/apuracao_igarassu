@@ -72,16 +72,16 @@ function tse2026TotalsForMunicipality(string $ibgeCode): array
     }
     if (!$municipality) return ['year' => 2026, 'turn' => 1, 'source' => 'TSE', 'available' => false, 'sections' => 0, 'sectionsTotalized' => 0, 'offices' => []];
     $code = (string) $municipality['cd'];
-    $offices = ['governador' => ['0003', '006259', 4], 'senador' => ['0005', '006259', 4], 'federal' => ['0006', '006259', 10], 'estadual' => ['0007', '006259', 10], 'presidente' => ['0001', '006257', 4]];
+    $offices = ['governador' => ['0003', '006259'], 'senador' => ['0005', '006259'], 'federal' => ['0006', '006259'], 'estadual' => ['0007', '006259'], 'presidente' => ['0001', '006257']];
     $totals = ['year' => 2026, 'turn' => 1, 'source' => 'TSE', 'available' => true, 'sections' => 0, 'sectionsTotalized' => 0, 'offices' => []];
-    foreach ($offices as $key => [$officeCode, $electionId, $limit]) {
+    foreach ($offices as $key => [$officeCode, $electionId]) {
         $result = tse2026File('pe', $code, $officeCode, $electionId);
         if (!$result) continue;
         $totals['sections'] = max($totals['sections'], (int) ($result['s']['ts'] ?? 0));
         $totals['sectionsTotalized'] = max($totals['sectionsTotalized'], (int) ($result['s']['st'] ?? 0));
         $candidates = tse2026Candidates($result);
         usort($candidates, static fn(array $a, array $b): int => $b['votes'] <=> $a['votes']);
-        $totals['offices'][$key] = array_slice($candidates, 0, $limit);
+        $totals['offices'][$key] = $candidates;
     }
     return $totals;
 }
@@ -111,7 +111,6 @@ function tse2026JapanTotals(): array
     }
     $totals['offices']['presidente'] = array_values($candidates);
     usort($totals['offices']['presidente'], static fn(array $a, array $b): int => $b['votes'] <=> $a['votes']);
-    $totals['offices']['presidente'] = array_slice($totals['offices']['presidente'], 0, 4);
     return $totals;
 }
 
