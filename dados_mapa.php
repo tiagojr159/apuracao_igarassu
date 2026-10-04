@@ -44,7 +44,7 @@ function tse2026Candidates(array $data): array
                     $id = (string) ($candidate['sqcand'] ?? $candidate['n'] ?? $candidate['nm'] ?? '');
                     if ($id === '') continue;
                     $votes = (int) preg_replace('/\D/', '', (string) ($candidate['vap'] ?? '0'));
-                    if (!isset($candidates[$id])) $candidates[$id] = ['name' => (string) ($candidate['nm'] ?? ''), 'votes' => 0];
+                    if (!isset($candidates[$id])) $candidates[$id] = ['name' => (string) (($candidate['nmu'] ?? '') !== '' ? $candidate['nmu'] : ($candidate['nm'] ?? '')), 'votes' => 0];
                     $candidates[$id]['votes'] += $votes;
                 }
             }
@@ -77,6 +77,8 @@ function tse2026TotalsForMunicipality(string $ibgeCode): array
     foreach ($offices as $key => [$officeCode, $electionId]) {
         $result = tse2026File('pe', $code, $officeCode, $electionId);
         if (!$result) continue;
+        // Nunca mostre um payload de outro ciclo eleitoral como se fosse 2026.
+        if ((string) ($result['ele'] ?? '') !== '6259') continue;
         $totals['sections'] = max($totals['sections'], (int) ($result['s']['ts'] ?? 0));
         $totals['sectionsTotalized'] = max($totals['sectionsTotalized'], (int) ($result['s']['st'] ?? 0));
         $candidates = tse2026Candidates($result);
@@ -101,6 +103,7 @@ function tse2026JapanTotals(): array
     foreach ($locations as $location) {
         $result = tse2026File('zz', (string) $location['cd'], '0001', '006257');
         if (!$result) continue;
+        if ((string) ($result['ele'] ?? '') !== '6257') continue;
         $totals['sections'] += (int) ($result['s']['ts'] ?? 0);
         $totals['sectionsTotalized'] += (int) ($result['s']['st'] ?? 0);
         foreach (tse2026Candidates($result) as $candidate) {
@@ -133,7 +136,6 @@ $cityCodes = [
 ];
 $city = isset($_GET['cidade']) ? (string) $_GET['cidade'] : 'Igarassu';
 $file = __DIR__ . '/data/map_layers.json';
-
 if (!is_file($file) || !is_readable($file)) {
     http_response_code(503);
     echo json_encode(['error' => 'A base cartográfica local não está disponível.']);
@@ -173,7 +175,10 @@ try {
     } elseif (isset($cityCodes[$city], $base['cities'][$cityCodes[$city]])) {
         $cityData = $base['cities'][$cityCodes[$city]];
         $pollingPlaces = array_map(static function (array $place): array {
+            // Não associe resultados de 2022 aos locais; os dados eleitorais exibidos
+            // devem vir exclusivamente da apuração de 2026.
             $place['election'] = null;
+            $place['apurated'] = false;
             return $place;
         }, $cityData['places']);
         $result = [

@@ -27,7 +27,7 @@ body{background:var(--bg);color:var(--ink)}
 .key-boundary{border-color:#087a3e;background:repeating-linear-gradient(135deg,#edf5ce 0 3px,#43a253 3px 4px)}
 .key-municipal{background:repeating-linear-gradient(35deg,#edf5ce 0 2px,#43a253 2px 3px,#fff8c5 3px 5px)}
 .key-line{background:#35a552}
-.key-poll,.school-icon{background:#f5d400}
+.key-poll{background:#e99642}.key-poll.apurated{background:#168bd2;box-shadow:0 0 0 1px #09629a}.school-icon{background:#f5d400}
 .school-icon{color:#17482d}
 .election-tabs button.active,.municipal-election-tabs button.active{background:#edf5ce;border-color:#a9ca83;color:#155d36}
 .election-close{background:#edf5e9;color:#155d36}
