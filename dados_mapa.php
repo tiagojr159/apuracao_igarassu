@@ -44,7 +44,7 @@ function tse2026Candidates(array $data): array
                     $id = (string) ($candidate['sqcand'] ?? $candidate['n'] ?? $candidate['nm'] ?? '');
                     if ($id === '') continue;
                     $votes = (int) preg_replace('/\D/', '', (string) ($candidate['vap'] ?? '0'));
-                    if (!isset($candidates[$id])) $candidates[$id] = ['name' => (string) (($candidate['nmu'] ?? '') !== '' ? $candidate['nmu'] : ($candidate['nm'] ?? '')), 'votes' => 0];
+                    if (!isset($candidates[$id])) $candidates[$id] = ['id' => $id, 'number' => (string) ($candidate['n'] ?? ''), 'name' => (string) (($candidate['nmu'] ?? '') !== '' ? $candidate['nmu'] : ($candidate['nm'] ?? '')), 'party' => (string) ($party['sg'] ?? ''), 'votes' => 0];
                     $candidates[$id]['votes'] += $votes;
                 }
             }
@@ -86,6 +86,24 @@ function tse2026TotalsForMunicipality(string $ibgeCode): array
         $totals['offices'][$key] = $candidates;
     }
     return $totals;
+}
+
+function tse2026OfficeCandidatesForMunicipality(string $ibgeCode, string $office): array
+{
+    $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/6259/config/mun-e006259-cm.json');
+    foreach (($config['abr'] ?? []) as $state) {
+        if (($state['cd'] ?? '') !== 'pe') continue;
+        foreach (($state['mu'] ?? []) as $municipality) {
+            if (($municipality['cdi'] ?? '') !== $ibgeCode) continue;
+            [$officeCode, $electionId] = ['estadual' => ['0007', '006259'], 'federal' => ['0006', '006259'], 'senador' => ['0005', '006259'], 'governador' => ['0003', '006259'], 'presidente' => ['0001', '006257']][$office];
+            $result = tse2026File('pe', (string) $municipality['cd'], $officeCode, $electionId);
+            if (!$result || (string) ($result['ele'] ?? '') !== ltrim($electionId, '0')) return [];
+            $candidates = tse2026Candidates($result);
+            usort($candidates, static fn(array $a, array $b): int => $b['votes'] <=> $a['votes']);
+            return $candidates;
+        }
+    }
+    return [];
 }
 
 function tse2026JapanTotals(): array
@@ -134,6 +152,39 @@ $cityCodes = [
     'Goiana' => '2606200',
     'São Lourenço da Mata' => '2613701',
 ];
+$consultationOffices = ['estadual' => ['0007', '006259'], 'federal' => ['0006', '006259'], 'senador' => ['0005', '006259'], 'governador' => ['0003', '006259'], 'presidente' => ['0001', '006257']];
+if (isset($_GET['consulta'])) {
+    $action = (string) $_GET['consulta'];
+    $office = (string) ($_GET['cargo'] ?? '');
+    if (!isset($consultationOffices[$office])) { http_response_code(400); echo json_encode(['error' => 'Cargo inválido.']); exit; }
+    $rows = [];
+    $municipalities = [];
+    $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/6259/config/mun-e006259-cm.json');
+    foreach (($config['abr'] ?? []) as $state) if (($state['cd'] ?? '') === 'pe') foreach (($state['mu'] ?? []) as $municipality) $municipalities[] = ['name' => (string) $municipality['nm'], 'code' => (string) $municipality['cdi']];
+    foreach ($municipalities as $municipality) {
+        $cityName = $municipality['name']; $ibgeCode = $municipality['code'];
+        foreach (tse2026OfficeCandidatesForMunicipality($ibgeCode, $office) as $candidate) {
+            $rows[] = ['city' => $cityName, 'id' => $candidate['id'] ?? '', 'name' => $candidate['name'], 'number' => $candidate['number'] ?? '', 'party' => $candidate['party'] ?? '', 'votes' => (int) $candidate['votes']];
+        }
+    }
+    if ($action === 'candidatos') {
+        $party = (string) ($_GET['partido'] ?? ''); $unique = [];
+        foreach ($rows as $row) if ($row['party'] === $party) $unique[$row['id']] = ['id' => $row['id'], 'name' => $row['name'], 'number' => $row['number']];
+        usort($unique, static fn(array $a, array $b): int => strnatcasecmp($a['name'], $b['name']));
+        echo json_encode(['candidates' => array_values($unique)], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
+    }
+    if ($action === 'buscar') {
+        $party = (string) ($_GET['partido'] ?? ''); $candidateId = (string) ($_GET['candidato'] ?? ''); $cityVotes = []; $candidateName = '';
+        foreach ($rows as $row) if ($row['party'] === $party && $row['id'] === $candidateId) { $cityVotes[$row['city']] = $row['votes']; $candidateName = $row['name']; }
+        $cityVotes = array_filter($cityVotes, static fn(int $votes): bool => $votes > 0); arsort($cityVotes);
+        echo json_encode(['candidate' => $candidateName, 'cities' => $cityVotes, 'total' => array_sum($cityVotes)], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
+    }
+    if ($action === 'partidos') {
+        $parties = array_values(array_unique(array_filter(array_column($rows, 'party')))); sort($parties, SORT_NATURAL | SORT_FLAG_CASE);
+        echo json_encode(['parties' => $parties], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
+    }
+    http_response_code(400); echo json_encode(['error' => 'Consulta inválida.']); exit;
+}
 $city = isset($_GET['cidade']) ? (string) $_GET['cidade'] : 'Igarassu';
 $file = __DIR__ . '/data/map_layers.json';
 if (!is_file($file) || !is_readable($file)) {
