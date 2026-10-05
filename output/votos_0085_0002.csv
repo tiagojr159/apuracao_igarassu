@@ -1,0 +1,134 @@
+﻿COD_CARGO;CARGO;TIPO_VOTO;NUMERO;PARTIDO;VOTOS
+1;Presidente;NOMINAL;13;13;169
+1;Presidente;NOMINAL;14;14;4
+1;Presidente;NOMINAL;22;22;105
+1;Presidente;NOMINAL;30;30;1
+1;Presidente;NOMINAL;55;55;6
+1;Presidente;NOMINAL;70;70;6
+1;Presidente;NOMINAL;80;80;1
+1;Presidente;BRANCO;;;8
+1;Presidente;NULO;;;15
+6;Deputado Federal;NOMINAL;1000;10;5
+6;Deputado Federal;NOMINAL;1010;10;8
+6;Deputado Federal;NOMINAL;1012;10;3
+6;Deputado Federal;NOMINAL;1111;11;24
+6;Deputado Federal;NOMINAL;1120;11;3
+6;Deputado Federal;NOMINAL;1122;11;14
+6;Deputado Federal;NOMINAL;1161;11;2
+6;Deputado Federal;NOMINAL;1222;12;1
+6;Deputado Federal;NOMINAL;1301;13;8
+6;Deputado Federal;NOMINAL;1303;13;3
+6;Deputado Federal;NOMINAL;1310;13;2
+6;Deputado Federal;NOMINAL;1313;13;1
+6;Deputado Federal;NOMINAL;1314;13;8
+6;Deputado Federal;NOMINAL;1331;13;1
+6;Deputado Federal;NOMINAL;1500;15;1
+6;Deputado Federal;NOMINAL;1515;15;2
+6;Deputado Federal;NOMINAL;1599;15;3
+6;Deputado Federal;NOMINAL;2020;20;10
+6;Deputado Federal;NOMINAL;2022;20;8
+6;Deputado Federal;NOMINAL;2030;20;1
+6;Deputado Federal;NOMINAL;2055;20;15
+6;Deputado Federal;NOMINAL;2201;22;2
+6;Deputado Federal;NOMINAL;2222;22;5
+6;Deputado Federal;NOMINAL;2288;22;7
+6;Deputado Federal;NOMINAL;3000;30;3
+6;Deputado Federal;NOMINAL;3030;30;5
+6;Deputado Federal;NOMINAL;3033;30;3
+6;Deputado Federal;NOMINAL;4000;40;1
+6;Deputado Federal;NOMINAL;4020;40;1
+6;Deputado Federal;NOMINAL;4040;40;16
+6;Deputado Federal;NOMINAL;4333;43;14
+6;Deputado Federal;NOMINAL;4445;44;1
+6;Deputado Federal;NOMINAL;5005;50;2
+6;Deputado Federal;NOMINAL;5050;50;8
+6;Deputado Federal;NOMINAL;5500;55;46
+6;Deputado Federal;NOMINAL;5545;55;2
+6;Deputado Federal;NOMINAL;5555;55;10
+6;Deputado Federal;NOMINAL;5566;55;1
+6;Deputado Federal;NOMINAL;6500;65;1
+6;Deputado Federal;NOMINAL;6513;65;3
+6;Deputado Federal;NOMINAL;7000;70;1
+6;Deputado Federal;NOMINAL;7010;70;2
+6;Deputado Federal;NOMINAL;7099;70;1
+6;Deputado Federal;BRANCO;;;31
+6;Deputado Federal;NULO;;;18
+6;Deputado Federal;LEGENDA;11;11;1
+6;Deputado Federal;LEGENDA;13;13;2
+6;Deputado Federal;LEGENDA;20;20;2
+6;Deputado Federal;LEGENDA;40;40;1
+6;Deputado Federal;LEGENDA;50;50;1
+6;Deputado Federal;LEGENDA;55;55;1
+7;Deputado Estadual;NOMINAL;10123;10;3
+7;Deputado Estadual;NOMINAL;10190;10;1
+7;Deputado Estadual;NOMINAL;11000;11;1
+7;Deputado Estadual;NOMINAL;11111;11;2
+7;Deputado Estadual;NOMINAL;11115;11;1
+7;Deputado Estadual;NOMINAL;11222;11;7
+7;Deputado Estadual;NOMINAL;11234;11;1
+7;Deputado Estadual;NOMINAL;11444;11;1
+7;Deputado Estadual;NOMINAL;11511;11;1
+7;Deputado Estadual;NOMINAL;11611;11;4
+7;Deputado Estadual;NOMINAL;13000;13;4
+7;Deputado Estadual;NOMINAL;13113;13;5
+7;Deputado Estadual;NOMINAL;13123;13;2
+7;Deputado Estadual;NOMINAL;14000;14;1
+7;Deputado Estadual;NOMINAL;15000;15;1
+7;Deputado Estadual;NOMINAL;15001;15;2
+7;Deputado Estadual;NOMINAL;15015;15;2
+7;Deputado Estadual;NOMINAL;20123;20;10
+7;Deputado Estadual;NOMINAL;20222;20;5
+7;Deputado Estadual;NOMINAL;20300;20;13
+7;Deputado Estadual;NOMINAL;20333;20;2
+7;Deputado Estadual;NOMINAL;20610;20;36
+7;Deputado Estadual;NOMINAL;22022;22;5
+7;Deputado Estadual;NOMINAL;22190;22;1
+7;Deputado Estadual;NOMINAL;22622;22;1
+7;Deputado Estadual;NOMINAL;30000;30;2
+7;Deputado Estadual;NOMINAL;30630;30;2
+7;Deputado Estadual;NOMINAL;40040;40;1
+7;Deputado Estadual;NOMINAL;40140;40;3
+7;Deputado Estadual;NOMINAL;40190;40;1
+7;Deputado Estadual;NOMINAL;40654;40;5
+7;Deputado Estadual;NOMINAL;43333;43;2
+7;Deputado Estadual;NOMINAL;43555;43;5
+7;Deputado Estadual;NOMINAL;43643;43;1
+7;Deputado Estadual;NOMINAL;50000;50;1
+7;Deputado Estadual;NOMINAL;50999;50;2
+7;Deputado Estadual;NOMINAL;55000;55;1
+7;Deputado Estadual;NOMINAL;55044;55;1
+7;Deputado Estadual;NOMINAL;55055;55;1
+7;Deputado Estadual;NOMINAL;55123;55;3
+7;Deputado Estadual;NOMINAL;55190;55;5
+7;Deputado Estadual;NOMINAL;55255;55;1
+7;Deputado Estadual;NOMINAL;55333;55;41
+7;Deputado Estadual;NOMINAL;55455;55;69
+7;Deputado Estadual;NOMINAL;55500;55;1
+7;Deputado Estadual;NOMINAL;55789;55;1
+7;Deputado Estadual;NOMINAL;65013;65;2
+7;Deputado Estadual;NOMINAL;70123;70;1
+7;Deputado Estadual;BRANCO;;;19
+7;Deputado Estadual;NULO;;;16
+7;Deputado Estadual;LEGENDA;10;10;1
+7;Deputado Estadual;LEGENDA;11;11;2
+7;Deputado Estadual;LEGENDA;12;12;3
+7;Deputado Estadual;LEGENDA;13;13;6
+7;Deputado Estadual;LEGENDA;20;20;1
+7;Deputado Estadual;LEGENDA;55;55;3
+5;Senador;NOMINAL;111;11;78
+5;Senador;NOMINAL;123;12;105
+5;Senador;NOMINAL;130;13;121
+5;Senador;NOMINAL;180;18;3
+5;Senador;NOMINAL;222;22;83
+5;Senador;NOMINAL;300;30;34
+5;Senador;NOMINAL;355;35;1
+5;Senador;NOMINAL;555;55;46
+5;Senador;NOMINAL;801;80;1
+5;Senador;BRANCO;;;77
+5;Senador;NULO;;;81
+3;Governador;NOMINAL;14;14;1
+3;Governador;NOMINAL;40;40;88
+3;Governador;NOMINAL;50;50;3
+3;Governador;NOMINAL;55;55;175
+3;Governador;BRANCO;;;14
+3;Governador;NULO;;;34

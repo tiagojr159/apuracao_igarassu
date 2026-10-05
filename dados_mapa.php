@@ -11,7 +11,8 @@ function tse2026Json(string $url): ?array
         @mkdir($cacheDir, 0775, true);
     }
     $cacheFile = $cacheDir . '/' . hash('sha256', $url) . '.json';
-    if (is_file($cacheFile) && (time() - (int) filemtime($cacheFile)) < 45) {
+    $cacheTtl = (strpos($url, '-aux.json') !== false) ? 600 : ((strpos($url, '-cs.json') !== false) ? 86400 : 45);
+    if (is_file($cacheFile) && (time() - (int) filemtime($cacheFile)) < $cacheTtl) {
         $cached = json_decode((string) file_get_contents($cacheFile), true);
         if (is_array($cached)) return $cached;
     }
@@ -32,6 +33,80 @@ function tse2026Json(string $url): ?array
     if (!is_array($data)) return null;
     @file_put_contents($cacheFile, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     return $data;
+}
+
+function tse2026Bytes(string $url): ?string
+{
+    $cacheDir = __DIR__ . '/data/cache_tse_2026_bu';
+    if (!is_dir($cacheDir)) @mkdir($cacheDir, 0775, true);
+    $cacheFile = $cacheDir . '/' . hash('sha256', $url) . '.bin';
+    if (is_file($cacheFile) && time() - (int) filemtime($cacheFile) < 3600) return (string) file_get_contents($cacheFile);
+    $body = false;
+    if (function_exists('curl_init')) {
+        $curl = curl_init($url);
+        curl_setopt_array($curl, [CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true, CURLOPT_CONNECTTIMEOUT => 4, CURLOPT_TIMEOUT => 12]);
+        $body = curl_exec($curl); $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE); curl_close($curl);
+        if ($status < 200 || $status >= 300) $body = false;
+    } elseif (ini_get('allow_url_fopen')) $body = @file_get_contents($url, false, stream_context_create(['http' => ['timeout' => 12]]));
+    if (!is_string($body) || $body === '') return null;
+    @file_put_contents($cacheFile, $body);
+    return $body;
+}
+
+function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, int $officeCode, int $candidateNumber, int $offset, int $limit, int $localFilter = 0): array
+{
+    require_once __DIR__ . '/bu_asn.php';
+    $pleitoPath = '3220'; $pleitoFile = '003220'; $municipalityCode = str_pad($municipalityCode, 5, '0', STR_PAD_LEFT);
+    $places = [];
+    $mapFile = __DIR__ . '/data/map_layers.json';
+    if (is_file($mapFile)) {
+        $mapData = json_decode((string) file_get_contents($mapFile), true);
+        foreach (($mapData['cities'][$ibgeCode]['places'] ?? []) as $place) {
+            $places[(string) ($place['zone'] ?? '') . ':' . (string) ($place['local'] ?? '')] = $place;
+        }
+    }
+    $prefix = 'https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/';
+    $configUrl = $prefix . $pleitoPath . '/config/pe/pe-p' . $pleitoFile . '-cs.json';
+    $config = tse2026Json($configUrl);
+    if (!$config) throw new RuntimeException('O TSE não forneceu a configuração das seções de Pernambuco.');
+    $sections = [];
+    foreach (($config['abr'] ?? []) as $uf) if (($uf['cd'] ?? '') === 'pe') foreach (($uf['mu'] ?? []) as $mu) {
+        if ((string) ($mu['cd'] ?? '') !== $municipalityCode) continue;
+        foreach (($mu['zon'] ?? []) as $zone) foreach (($zone['sec'] ?? []) as $section) $sections[] = ['zone' => (string) ($zone['cd'] ?? ''), 'section' => (string) ($section['ns'] ?? ''), 'data' => $section];
+    }
+    usort($sections, static function (array $a, array $b): int { return strnatcmp($a['zone'] . ':' . $a['section'], $b['zone'] . ':' . $b['section']); });
+    $total = count($sections); $slice = array_slice($sections, $offset, $limit); $rows = [];
+    foreach ($slice as $item) {
+        $zone = str_pad($item['zone'], 4, '0', STR_PAD_LEFT); $section = str_pad($item['section'], 4, '0', STR_PAD_LEFT);
+        if (!empty($item['data']['nsp'])) { if ($localFilter === 0) $rows[] = ['zone' => $zone, 'section' => $section, 'votes' => null, 'place_name' => 'Mesmo colégio da seção principal ' . str_pad((string) $item['data']['nsp'], 4, '0', STR_PAD_LEFT), 'aggregated_into' => (string) $item['data']['nsp']]; continue; }
+        $auxName = 'p' . $pleitoFile . '-pe-m' . $municipalityCode . '-z' . $zone . '-s' . $section . '-aux.json';
+        $auxUrl = $prefix . $pleitoPath . '/dados/pe/' . $municipalityCode . '/' . $zone . '/' . $section . '/' . $auxName;
+        $aux = tse2026Json($auxUrl); $selected = null;
+        foreach (($aux['hashes'] ?? []) as $hash) if (($hash['st'] ?? '') === 'Totalizado') $selected = $hash;
+        if (!$selected) { $rows[] = ['zone' => $zone, 'section' => $section, 'votes' => null, 'pending' => true]; continue; }
+        $buFile = null;
+        foreach (($selected['arq'] ?? []) as $file) if (($file['tp'] ?? '') === 'bu' || preg_match('/-bu\.(dat|bu)$/i', (string) ($file['nm'] ?? ''))) { $buFile = (string) $file['nm']; break; }
+        if ($buFile === null) { $rows[] = ['zone' => $zone, 'section' => $section, 'votes' => null, 'pending' => true]; continue; }
+        $buUrl = $prefix . $pleitoPath . '/dados/pe/' . $municipalityCode . '/' . $zone . '/' . $section . '/' . rawurlencode((string) $selected['hash']) . '/' . rawurlencode($buFile);
+        try {
+            $raw = tse2026Bytes($buUrl); if ($raw === null) throw new RuntimeException('BU indisponível.');
+            $identity = buDecodeSectionIdentity($raw);
+            if ($localFilter > 0 && $identity['local'] !== $localFilter) continue;
+            $decodedVotes = buDecodeVotes($raw); $votes = 0; $candidateVotes = [];
+            foreach ($decodedVotes as $vote) {
+                if ($vote['vote_type'] !== 'NOMINAL') continue;
+                if ($candidateNumber === 0 && $localFilter > 0) {
+                    $candidateVotes[] = ['office_code' => (int) $vote['office_code'], 'number' => (string) $vote['number'], 'votes' => (int) $vote['votes']];
+                } elseif ((int) $vote['office_code'] === $officeCode && (int) $vote['number'] === $candidateNumber) $votes += (int) $vote['votes'];
+            }
+            $place = $places[$identity['zone'] . ':' . $identity['local']] ?? null;
+            $row = ['zone' => $zone, 'section' => $section, 'local' => $identity['local'], 'place_name' => $place['name'] ?? ('Local de votação ' . $identity['local']), 'neighborhood' => $place['neighborhood'] ?? ''];
+            if ($candidateNumber === 0 && $localFilter > 0) $row['candidate_votes'] = $candidateVotes;
+            else $row['votes'] = $votes;
+            $rows[] = $row;
+        } catch (Throwable $error) { $rows[] = ['zone' => $zone, 'section' => $section, 'votes' => null, 'error' => true]; }
+    }
+    return ['sections' => $rows, 'total_sections' => $total, 'next_offset' => $offset + count($slice), 'done' => $offset + count($slice) >= $total];
 }
 
 function tse2026Candidates(array $data): array
@@ -157,6 +232,31 @@ if (isset($_GET['consulta'])) {
     $action = (string) $_GET['consulta'];
     $office = (string) ($_GET['cargo'] ?? '');
     if (!isset($consultationOffices[$office])) { http_response_code(400); echo json_encode(['error' => 'Cargo inválido.']); exit; }
+    if ($action === 'colegio-secoes') {
+        $cityName = (string) ($_GET['cidade'] ?? ''); $local = (int) ($_GET['local'] ?? 0); $ibge = $cityCodes[$cityName] ?? '';
+        if ($ibge === '' || $local < 1) { http_response_code(400); echo json_encode(['error' => 'Município ou local de votação inválido.']); exit; }
+        $municipalityCode = '';
+        $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/6259/config/mun-e006259-cm.json');
+        foreach (($config['abr'] ?? []) as $state) if (($state['cd'] ?? '') === 'pe') foreach (($state['mu'] ?? []) as $mu) if ((string) ($mu['cdi'] ?? '') === $ibge) $municipalityCode = (string) ($mu['cd'] ?? '');
+        if ($municipalityCode === '') { http_response_code(404); echo json_encode(['error' => 'Código do município não encontrado no TSE.']); exit; }
+        try {
+            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, 0, 0, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))), $local);
+            echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
+        } catch (Throwable $error) { http_response_code(502); echo json_encode(['error' => $error->getMessage()], JSON_UNESCAPED_UNICODE); exit; }
+    }
+    if ($action === 'secoes-candidato') {
+        $cityName = (string) ($_GET['cidade'] ?? ''); $candidateNumber = (int) ($_GET['numero'] ?? 0);
+        $ibge = $cityCodes[$cityName] ?? '';
+        if ($ibge === '' || $candidateNumber < 1) { http_response_code(400); echo json_encode(['error' => 'Município ou candidato inválido.']); exit; }
+        $municipalityCode = '';
+        $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/6259/config/mun-e006259-cm.json');
+        foreach (($config['abr'] ?? []) as $state) if (($state['cd'] ?? '') === 'pe') foreach (($state['mu'] ?? []) as $mu) if ((string) ($mu['cdi'] ?? '') === $ibge) $municipalityCode = (string) ($mu['cd'] ?? '');
+        if ($municipalityCode === '') { http_response_code(404); echo json_encode(['error' => 'Código do município não encontrado no TSE.']); exit; }
+        try {
+            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, (int) $consultationOffices[$office][0], $candidateNumber, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))));
+            echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
+        } catch (Throwable $error) { http_response_code(502); echo json_encode(['error' => $error->getMessage()], JSON_UNESCAPED_UNICODE); exit; }
+    }
     $rows = [];
     $municipalities = [];
     $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/6259/config/mun-e006259-cm.json');

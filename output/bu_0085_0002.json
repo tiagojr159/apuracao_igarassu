@@ -1,0 +1,1445 @@
+{
+  "uf": "PE",
+  "municipio": 24350,
+  "zona": 85,
+  "secao": 2,
+  "local_votacao": 1066,
+  "id_pleito": 3220,
+  "fase": "oficial",
+  "data_hora_geracao": "20261004T173648",
+  "data_hora_emissao": "20261004T173554",
+  "identificacao_urna": {
+    "tipoUrna": "secao",
+    "versaoVotacao": "10.23.0.0 - Praia da Barra do Cahy",
+    "correspondenciaResultado": {
+      "identificacao": [
+        "identificacaoSecaoEleitoral",
+        {
+          "municipioZona": {
+            "municipio": 24350,
+            "zona": 85
+          },
+          "local": 1,
+          "secao": 2
+        }
+      ],
+      "carga": {
+        "numeroInternoUrna": 2160804,
+        "numeroSerieFC": {
+          "__bytes_hex__": "8f62b610"
+        },
+        "identificadorGeradorMidia": {
+          "nome": "ZPE085WKS03",
+          "serialCertificadoTPM": "5A1803E4D5A001C33EB6",
+          "serialInstalacao": "E4E96C44"
+        },
+        "dataHoraCarga": "20260926T080900",
+        "codigoCarga": "558966773894757646268645"
+      }
+    },
+    "tipoArquivo": "votacaoUE",
+    "numeroSerieFV": {
+      "__bytes_hex__": "aa03f620"
+    }
+  },
+  "eleitores_compareceram": 315,
+  "detalhamento_comparecimento": {
+    "qtdEleitoresCompareceramSemBiometria": 8,
+    "qtdEleitoresHabilitadosPorBiometria": 294,
+    "qtdEleitoresHabilitadosPorBiografia": 13
+  },
+  "eleicoes": [
+    {
+      "id_eleicao": 6257,
+      "eleitores_aptos": 381,
+      "eleitores_aptos_secao": 381,
+      "eleitores_aptos_tte": 0,
+      "cargos": [
+        {
+          "codigo_cargo": 1,
+          "cargo": "Presidente",
+          "tipo_cargo": "majoritario",
+          "ordem_impressao": 5,
+          "votos": [
+            {
+              "codigo_eleicao": 6257,
+              "codigo_cargo": 1,
+              "cargo": "Presidente",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 13,
+              "partido": 13,
+              "votos": 169
+            },
+            {
+              "codigo_eleicao": 6257,
+              "codigo_cargo": 1,
+              "cargo": "Presidente",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 14,
+              "partido": 14,
+              "votos": 4
+            },
+            {
+              "codigo_eleicao": 6257,
+              "codigo_cargo": 1,
+              "cargo": "Presidente",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 22,
+              "partido": 22,
+              "votos": 105
+            },
+            {
+              "codigo_eleicao": 6257,
+              "codigo_cargo": 1,
+              "cargo": "Presidente",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 30,
+              "partido": 30,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6257,
+              "codigo_cargo": 1,
+              "cargo": "Presidente",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 55,
+              "partido": 55,
+              "votos": 6
+            },
+            {
+              "codigo_eleicao": 6257,
+              "codigo_cargo": 1,
+              "cargo": "Presidente",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 70,
+              "partido": 70,
+              "votos": 6
+            },
+            {
+              "codigo_eleicao": 6257,
+              "codigo_cargo": 1,
+              "cargo": "Presidente",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 80,
+              "partido": 80,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6257,
+              "codigo_cargo": 1,
+              "cargo": "Presidente",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "BRANCO",
+              "numero": null,
+              "partido": null,
+              "votos": 8
+            },
+            {
+              "codigo_eleicao": 6257,
+              "codigo_cargo": 1,
+              "cargo": "Presidente",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NULO",
+              "numero": null,
+              "partido": null,
+              "votos": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id_eleicao": 6259,
+      "eleitores_aptos": 381,
+      "eleitores_aptos_secao": 381,
+      "eleitores_aptos_tte": 0,
+      "cargos": [
+        {
+          "codigo_cargo": 6,
+          "cargo": "Deputado Federal",
+          "tipo_cargo": "proporcional",
+          "ordem_impressao": 1,
+          "votos": [
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1000,
+              "partido": 10,
+              "votos": 5
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1010,
+              "partido": 10,
+              "votos": 8
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1012,
+              "partido": 10,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1111,
+              "partido": 11,
+              "votos": 24
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1120,
+              "partido": 11,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1122,
+              "partido": 11,
+              "votos": 14
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1161,
+              "partido": 11,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1222,
+              "partido": 12,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1301,
+              "partido": 13,
+              "votos": 8
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1303,
+              "partido": 13,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1310,
+              "partido": 13,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1313,
+              "partido": 13,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1314,
+              "partido": 13,
+              "votos": 8
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1331,
+              "partido": 13,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1500,
+              "partido": 15,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1515,
+              "partido": 15,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 1599,
+              "partido": 15,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 2020,
+              "partido": 20,
+              "votos": 10
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 2022,
+              "partido": 20,
+              "votos": 8
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 2030,
+              "partido": 20,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 2055,
+              "partido": 20,
+              "votos": 15
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 2201,
+              "partido": 22,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 2222,
+              "partido": 22,
+              "votos": 5
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 2288,
+              "partido": 22,
+              "votos": 7
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 3000,
+              "partido": 30,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 3030,
+              "partido": 30,
+              "votos": 5
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 3033,
+              "partido": 30,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 4000,
+              "partido": 40,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 4020,
+              "partido": 40,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 4040,
+              "partido": 40,
+              "votos": 16
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 4333,
+              "partido": 43,
+              "votos": 14
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 4445,
+              "partido": 44,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 5005,
+              "partido": 50,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 5050,
+              "partido": 50,
+              "votos": 8
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 5500,
+              "partido": 55,
+              "votos": 46
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 5545,
+              "partido": 55,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 5555,
+              "partido": 55,
+              "votos": 10
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 5566,
+              "partido": 55,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 6500,
+              "partido": 65,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 6513,
+              "partido": 65,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 7000,
+              "partido": 70,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 7010,
+              "partido": 70,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 7099,
+              "partido": 70,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "BRANCO",
+              "numero": null,
+              "partido": null,
+              "votos": 31
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NULO",
+              "numero": null,
+              "partido": null,
+              "votos": 18
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 11,
+              "partido": 11,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 13,
+              "partido": 13,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 20,
+              "partido": 20,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 40,
+              "partido": 40,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 50,
+              "partido": 50,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 6,
+              "cargo": "Deputado Federal",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 55,
+              "partido": 55,
+              "votos": 1
+            }
+          ]
+        },
+        {
+          "codigo_cargo": 7,
+          "cargo": "Deputado Estadual",
+          "tipo_cargo": "proporcional",
+          "ordem_impressao": 2,
+          "votos": [
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 10123,
+              "partido": 10,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 10190,
+              "partido": 10,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 11000,
+              "partido": 11,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 11111,
+              "partido": 11,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 11115,
+              "partido": 11,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 11222,
+              "partido": 11,
+              "votos": 7
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 11234,
+              "partido": 11,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 11444,
+              "partido": 11,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 11511,
+              "partido": 11,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 11611,
+              "partido": 11,
+              "votos": 4
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 13000,
+              "partido": 13,
+              "votos": 4
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 13113,
+              "partido": 13,
+              "votos": 5
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 13123,
+              "partido": 13,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 14000,
+              "partido": 14,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 15000,
+              "partido": 15,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 15001,
+              "partido": 15,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 15015,
+              "partido": 15,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 20123,
+              "partido": 20,
+              "votos": 10
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 20222,
+              "partido": 20,
+              "votos": 5
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 20300,
+              "partido": 20,
+              "votos": 13
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 20333,
+              "partido": 20,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 20610,
+              "partido": 20,
+              "votos": 36
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 22022,
+              "partido": 22,
+              "votos": 5
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 22190,
+              "partido": 22,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 22622,
+              "partido": 22,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 30000,
+              "partido": 30,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 30630,
+              "partido": 30,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 40040,
+              "partido": 40,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 40140,
+              "partido": 40,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 40190,
+              "partido": 40,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 40654,
+              "partido": 40,
+              "votos": 5
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 43333,
+              "partido": 43,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 43555,
+              "partido": 43,
+              "votos": 5
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 43643,
+              "partido": 43,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 50000,
+              "partido": 50,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 50999,
+              "partido": 50,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55000,
+              "partido": 55,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55044,
+              "partido": 55,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55055,
+              "partido": 55,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55123,
+              "partido": 55,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55190,
+              "partido": 55,
+              "votos": 5
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55255,
+              "partido": 55,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55333,
+              "partido": 55,
+              "votos": 41
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55455,
+              "partido": 55,
+              "votos": 69
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55500,
+              "partido": 55,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 55789,
+              "partido": 55,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 65013,
+              "partido": 65,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NOMINAL",
+              "numero": 70123,
+              "partido": 70,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "BRANCO",
+              "numero": null,
+              "partido": null,
+              "votos": 19
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "NULO",
+              "numero": null,
+              "partido": null,
+              "votos": 16
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 10,
+              "partido": 10,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 11,
+              "partido": 11,
+              "votos": 2
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 12,
+              "partido": 12,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 13,
+              "partido": 13,
+              "votos": 6
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 20,
+              "partido": 20,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 7,
+              "cargo": "Deputado Estadual",
+              "tipo_cargo": "proporcional",
+              "tipo_voto": "LEGENDA",
+              "numero": 55,
+              "partido": 55,
+              "votos": 3
+            }
+          ]
+        },
+        {
+          "codigo_cargo": 5,
+          "cargo": "Senador",
+          "tipo_cargo": "majoritario",
+          "ordem_impressao": 3,
+          "votos": [
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 111,
+              "partido": 11,
+              "votos": 78
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 123,
+              "partido": 12,
+              "votos": 105
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 130,
+              "partido": 13,
+              "votos": 121
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 180,
+              "partido": 18,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 222,
+              "partido": 22,
+              "votos": 83
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 300,
+              "partido": 30,
+              "votos": 34
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 355,
+              "partido": 35,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 555,
+              "partido": 55,
+              "votos": 46
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 801,
+              "partido": 80,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "BRANCO",
+              "numero": null,
+              "partido": null,
+              "votos": 77
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 5,
+              "cargo": "Senador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NULO",
+              "numero": null,
+              "partido": null,
+              "votos": 81
+            }
+          ]
+        },
+        {
+          "codigo_cargo": 3,
+          "cargo": "Governador",
+          "tipo_cargo": "majoritario",
+          "ordem_impressao": 4,
+          "votos": [
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 3,
+              "cargo": "Governador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 14,
+              "partido": 14,
+              "votos": 1
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 3,
+              "cargo": "Governador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 40,
+              "partido": 40,
+              "votos": 88
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 3,
+              "cargo": "Governador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 50,
+              "partido": 50,
+              "votos": 3
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 3,
+              "cargo": "Governador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NOMINAL",
+              "numero": 55,
+              "partido": 55,
+              "votos": 175
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 3,
+              "cargo": "Governador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "BRANCO",
+              "numero": null,
+              "partido": null,
+              "votos": 14
+            },
+            {
+              "codigo_eleicao": 6259,
+              "codigo_cargo": 3,
+              "cargo": "Governador",
+              "tipo_cargo": "majoritario",
+              "tipo_voto": "NULO",
+              "numero": null,
+              "partido": null,
+              "votos": 34
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "validacoes": {
+    "fase_oficial": true,
+    "tipo_envelope_bu": true,
+    "tem_resultados": true
+  },
+  "schema_referencia": "decoder/bu_v2.asn1 (dataUrnas-br, V2)"
+}

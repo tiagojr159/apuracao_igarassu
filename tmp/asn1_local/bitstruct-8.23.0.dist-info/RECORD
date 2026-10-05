@@ -1,0 +1,12 @@
+bitstruct-8.23.0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+bitstruct-8.23.0.dist-info/METADATA,sha256=8ip_4NqP19CwVBRHxH1iCJe8h1mnpF01Ah8mDQRTM2s,7593
+bitstruct-8.23.0.dist-info/RECORD,,
+bitstruct-8.23.0.dist-info/WHEEL,sha256=VHGZz7MUUFeLJXeJOLgvlOGQ5p51DmyFDjttZX-how8,101
+bitstruct-8.23.0.dist-info/licenses/LICENSE,sha256=hvzo9a53wT3R8h9BDgUMCP9SzzYFfXiE1kZUqgaWTB4,1107
+bitstruct-8.23.0.dist-info/top_level.txt,sha256=b0kw0ViH-dPZgGdKvrcClAN_7YmjDw8qUAUUXSNmkq0,10
+bitstruct/__init__.py,sha256=EhdPI5YUyds9E5G0DVY3NvDxR-MzTeR_TM9pJGHBJlU,20866
+bitstruct/__pycache__/__init__.cpython-312.pyc,,
+bitstruct/bitstream.c,sha256=U0U6c345lrjrSqkVR1MG-gQojtEPRzmQ72z3lHl5H7I,18086
+bitstruct/bitstream.h,sha256=cUQLm6YEy-ujq59C9H3oD8sqCgMk7drMRsgu3fvdsjs,6217
+bitstruct/c.c,sha256=J0EbvtqiWelGt7DKLRs7rP_LYav4xpqgazHGWHfSiaU,71294
+bitstruct/c.cp312-win_amd64.pyd,sha256=xXghmREopMg_VVyudpeSlgwalCQLI98DybKLhoC5Xjg,31232
