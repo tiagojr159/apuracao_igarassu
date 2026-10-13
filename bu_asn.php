@@ -95,10 +95,15 @@ function buDecodeVotes(string $raw): array
     foreach ($electionList['children'] as $election) {
         $e = $election['children'];
         $electionId = buBerInteger($e[0]['children'][0] ?? $e[0]);
+        $eligible = isset($e[1]) ? buBerInteger($e[1]) : 0;
         $attendanceList = $e[4]['children'] ?? [];
         foreach ($attendanceList as $result) {
             $r = $result['children'];
+            $attended = isset($r[1]) ? buBerInteger($r[1]) : 0;
             $totals = $r[2]['children'] ?? [];
+            $results[] = ['election' => $electionId, 'office_code' => buBerInteger($r[0]['children'][0] ?? $r[0]),
+                'office' => 'Comparecimento', 'vote_type' => 'ATTENDANCE', 'number' => null,
+                'party' => null, 'votes' => 0, 'eligible' => $eligible, 'attended' => $attended];
             foreach ($totals as $total) {
                 $t = $total['children'];
                 $cargoChoice = $t[0]['children'][0] ?? $t[0];
@@ -117,7 +122,7 @@ function buDecodeVotes(string $raw): array
                     $results[] = ['election' => $electionId, 'office_code' => $cargoCode,
                         'office' => $cargoNames[$cargoCode] ?? 'Cargo ' . $cargoCode,
                         'vote_type' => $voteNames[$typeCode] ?? 'OUTRO', 'number' => $candidateNumber,
-                        'party' => $party, 'votes' => $count];
+                        'party' => $party, 'votes' => $count, 'eligible' => $eligible, 'attended' => $attended];
                 }
             }
         }

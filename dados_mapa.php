@@ -92,16 +92,16 @@ function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, 
             $raw = tse2026Bytes($buUrl); if ($raw === null) throw new RuntimeException('BU indisponível.');
             $identity = buDecodeSectionIdentity($raw);
             if ($localFilter > 0 && $identity['local'] !== $localFilter) continue;
-            $decodedVotes = buDecodeVotes($raw); $votes = 0; $candidateVotes = [];
+            $decodedVotes = buDecodeVotes($raw); $votes = 0; $candidateVotes = []; $attendance = null;
             foreach ($decodedVotes as $vote) {
-                if ($vote['vote_type'] !== 'NOMINAL') continue;
                 if ($candidateNumber === 0 && $localFilter > 0) {
-                    $candidateVotes[] = ['office_code' => (int) $vote['office_code'], 'number' => (string) $vote['number'], 'votes' => (int) $vote['votes']];
-                } elseif ((int) $vote['office_code'] === $officeCode && (int) $vote['number'] === $candidateNumber) $votes += (int) $vote['votes'];
+                    if ((int) $vote['office_code'] === $officeCode) $attendance = ['eligible' => (int) $vote['eligible'], 'attended' => (int) $vote['attended']];
+                    if ($vote['vote_type'] === 'NOMINAL' || $vote['vote_type'] === 'NULO') $candidateVotes[] = ['office_code' => (int) $vote['office_code'], 'number' => (string) ($vote['number'] ?? ''), 'vote_type' => $vote['vote_type'], 'votes' => (int) $vote['votes']];
+                } elseif ($vote['vote_type'] === 'NOMINAL' && (int) $vote['office_code'] === $officeCode && (int) $vote['number'] === $candidateNumber) $votes += (int) $vote['votes'];
             }
             $place = $places[$identity['zone'] . ':' . $identity['local']] ?? null;
             $row = ['zone' => $zone, 'section' => $section, 'local' => $identity['local'], 'place_name' => $place['name'] ?? ('Local de votação ' . $identity['local']), 'neighborhood' => $place['neighborhood'] ?? ''];
-            if ($candidateNumber === 0 && $localFilter > 0) $row['candidate_votes'] = $candidateVotes;
+            if ($candidateNumber === 0 && $localFilter > 0) { $row['candidate_votes'] = $candidateVotes; $row['attendance'] = $attendance; }
             else $row['votes'] = $votes;
             $rows[] = $row;
         } catch (Throwable $error) { $rows[] = ['zone' => $zone, 'section' => $section, 'votes' => null, 'error' => true]; }
@@ -240,7 +240,7 @@ if (isset($_GET['consulta'])) {
         foreach (($config['abr'] ?? []) as $state) if (($state['cd'] ?? '') === 'pe') foreach (($state['mu'] ?? []) as $mu) if ((string) ($mu['cdi'] ?? '') === $ibge) $municipalityCode = (string) ($mu['cd'] ?? '');
         if ($municipalityCode === '') { http_response_code(404); echo json_encode(['error' => 'Código do município não encontrado no TSE.']); exit; }
         try {
-            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, 0, 0, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))), $local);
+            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, (int) $consultationOffices[$office][0], 0, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))), $local);
             echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
         } catch (Throwable $error) { http_response_code(502); echo json_encode(['error' => $error->getMessage()], JSON_UNESCAPED_UNICODE); exit; }
     }
