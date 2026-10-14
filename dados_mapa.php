@@ -53,7 +53,7 @@ function tse2026Bytes(string $url): ?string
     return $body;
 }
 
-function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, int $officeCode, int $candidateNumber, int $offset, int $limit, int $localFilter = 0): array
+function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, int $officeCode, int $candidateNumber, int $offset, int $limit, int $localFilter = 0, int $zoneFilter = 0): array
 {
     require_once __DIR__ . '/bu_asn.php';
     $pleitoPath = '3220'; $pleitoFile = '003220'; $municipalityCode = str_pad($municipalityCode, 5, '0', STR_PAD_LEFT);
@@ -74,6 +74,17 @@ function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, 
         if ((string) ($mu['cd'] ?? '') !== $municipalityCode) continue;
         foreach (($mu['zon'] ?? []) as $zone) foreach (($zone['sec'] ?? []) as $section) $sections[] = ['zone' => (string) ($zone['cd'] ?? ''), 'section' => (string) ($section['ns'] ?? ''), 'data' => $section];
     }
+    $indexFile = __DIR__ . '/data/cache_tse_2026/section-index-' . $municipalityCode . '-' . $ibgeCode . '.json';
+    $configHash = hash('sha256', json_encode($config['abr'] ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    $sectionIndex = null; $storedIndex = null;
+    if ($localFilter > 0) {
+        $storedIndex = is_file($indexFile) ? json_decode((string) file_get_contents($indexFile), true) : null;
+        if (!is_array($storedIndex) || ($storedIndex['config_hash'] ?? '') !== $configHash) $storedIndex = ['config_hash' => $configHash, 'complete' => false, 'places' => []];
+        if ($storedIndex['complete'] ?? false) $sectionIndex = $storedIndex['places'] ?? [];
+    }
+    if ($sectionIndex !== null) {
+        $sections = $sectionIndex[$zoneFilter . ':' . $localFilter] ?? [];
+    }
     usort($sections, static function (array $a, array $b): int { return strnatcmp($a['zone'] . ':' . $a['section'], $b['zone'] . ':' . $b['section']); });
     $total = count($sections); $slice = array_slice($sections, $offset, $limit); $rows = [];
     foreach ($slice as $item) {
@@ -91,7 +102,13 @@ function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, 
         try {
             $raw = tse2026Bytes($buUrl); if ($raw === null) throw new RuntimeException('BU indisponível.');
             $identity = buDecodeSectionIdentity($raw);
-            if ($localFilter > 0 && $identity['local'] !== $localFilter) continue;
+            if ($localFilter > 0 && $sectionIndex === null) {
+                $placeKey = (int) $identity['zone'] . ':' . (int) $identity['local'];
+                $sectionKey = $item['zone'] . ':' . $item['section'];
+                $storedIndex['places'][$placeKey][$sectionKey] = ['zone' => $item['zone'], 'section' => $item['section'], 'data' => $item['data']];
+                if ($identity['local'] !== $localFilter || ($zoneFilter > 0 && $identity['zone'] !== $zoneFilter)) continue;
+            }
+            if ($localFilter > 0 && ($identity['local'] !== $localFilter || ($zoneFilter > 0 && $identity['zone'] !== $zoneFilter))) continue;
             $decodedVotes = buDecodeVotes($raw); $votes = 0; $candidateVotes = []; $attendance = null;
             foreach ($decodedVotes as $vote) {
                 if ($candidateNumber === 0 && $localFilter > 0) {
@@ -105,6 +122,12 @@ function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, 
             else $row['votes'] = $votes;
             $rows[] = $row;
         } catch (Throwable $error) { $rows[] = ['zone' => $zone, 'section' => $section, 'votes' => null, 'error' => true]; }
+    }
+    if ($localFilter > 0 && $storedIndex !== null) {
+        if ($offset + count($slice) >= $total) $storedIndex['complete'] = true;
+        foreach (($storedIndex['places'] ?? []) as &$indexedSections) $indexedSections = array_values($indexedSections);
+        unset($indexedSections);
+        @file_put_contents($indexFile, json_encode($storedIndex, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
     return ['sections' => $rows, 'total_sections' => $total, 'next_offset' => $offset + count($slice), 'done' => $offset + count($slice) >= $total];
 }
@@ -233,14 +256,14 @@ if (isset($_GET['consulta'])) {
     $office = (string) ($_GET['cargo'] ?? '');
     if (!isset($consultationOffices[$office])) { http_response_code(400); echo json_encode(['error' => 'Cargo inválido.']); exit; }
     if ($action === 'colegio-secoes') {
-        $cityName = (string) ($_GET['cidade'] ?? ''); $local = (int) ($_GET['local'] ?? 0); $ibge = $cityCodes[$cityName] ?? '';
+        $cityName = (string) ($_GET['cidade'] ?? ''); $local = (int) ($_GET['local'] ?? 0); $zone = (int) ($_GET['zona'] ?? 0); $ibge = $cityCodes[$cityName] ?? '';
         if ($ibge === '' || $local < 1) { http_response_code(400); echo json_encode(['error' => 'Município ou local de votação inválido.']); exit; }
         $municipalityCode = '';
         $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/6259/config/mun-e006259-cm.json');
         foreach (($config['abr'] ?? []) as $state) if (($state['cd'] ?? '') === 'pe') foreach (($state['mu'] ?? []) as $mu) if ((string) ($mu['cdi'] ?? '') === $ibge) $municipalityCode = (string) ($mu['cd'] ?? '');
         if ($municipalityCode === '') { http_response_code(404); echo json_encode(['error' => 'Código do município não encontrado no TSE.']); exit; }
         try {
-            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, (int) $consultationOffices[$office][0], 0, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))), $local);
+            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, (int) $consultationOffices[$office][0], 0, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))), $local, $zone);
             echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
         } catch (Throwable $error) { http_response_code(502); echo json_encode(['error' => $error->getMessage()], JSON_UNESCAPED_UNICODE); exit; }
     }
