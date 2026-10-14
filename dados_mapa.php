@@ -325,11 +325,15 @@ try {
         ];
     } elseif (isset($cityCodes[$city], $base['cities'][$cityCodes[$city]])) {
         $cityData = $base['cities'][$cityCodes[$city]];
-        $pollingPlaces = array_map(static function (array $place): array {
+        $historicalResultsFile = __DIR__ . '/data/resultados_2022.json';
+        $historicalPlaces = is_file($historicalResultsFile) ? (json_decode((string) file_get_contents($historicalResultsFile), true)['places'] ?? []) : [];
+        $pollingPlaces = array_map(static function (array $place) use ($historicalPlaces): array {
             // Não associe resultados de 2022 aos locais; os dados eleitorais exibidos
             // devem vir exclusivamente da apuração de 2026.
             $place['election'] = null;
             $place['apurated'] = false;
+            $key = implode(':', [(string) ($place['cityCode'] ?? ''), (string) ($place['zone'] ?? ''), (string) ($place['local'] ?? '')]);
+            $place['sectionCount'] = (int) ($historicalPlaces[$key]['sections'] ?? 0);
             return $place;
         }, $cityData['places']);
         $result = [
