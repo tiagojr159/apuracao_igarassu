@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 // Interface compartilhada; cada município tem sua própria URL.
-$cities = ['Igarassu', 'Itapissuma', 'Abreu e Lima', 'Paulista', 'Olinda', 'Recife', 'Jaboatão dos Guararapes', 'Camaragibe', 'Santa Cruz do Capibaribe', 'Toritama', 'Cabo de Santo Agostinho', 'Ipojuca', 'Caruaru', 'Goiana', 'São Lourenço da Mata', 'Japão', 'Pernambuco'];
+$cities = ['Igarassu', 'Itapissuma', 'Abreu e Lima', 'Paulista', 'Olinda', 'Recife', 'Jaboatão dos Guararapes', 'Camaragibe', 'Santa Cruz do Capibaribe', 'Toritama', 'Cabo de Santo Agostinho', 'Ipojuca', 'Caruaru', 'Goiana', 'São Lourenço da Mata', 'Japão', 'Pernambuco', 'Exterior'];
 $requestedCity = isset($_GET['cidade']) ? (string) $_GET['cidade'] : 'Igarassu';
 $selectedCity = in_array($requestedCity, $cities, true) ? $requestedCity : 'Igarassu';
 $template = file_get_contents(__DIR__ . '/index.html');

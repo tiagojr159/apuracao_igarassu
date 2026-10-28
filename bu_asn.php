@@ -57,19 +57,19 @@ function buBerInteger(array $node): int
 
 function buFindOctetString(array $node): ?string
 {
-    if ($node['class'] === 0 && $node['tag'] === 4 && !$node['constructed']) return $node['value'];
+    $found = ($node['class'] === 0 && $node['tag'] === 4 && !$node['constructed']) ? $node['value'] : null;
     foreach ($node['children'] as $child) {
-        $found = buFindOctetString($child);
-        if ($found !== null && strlen($found) > 1000) return $found;
+        $candidate = buFindOctetString($child);
+        if ($candidate !== null && ($found === null || strlen($candidate) > strlen($found))) $found = $candidate;
     }
-    return null;
+    return $found;
 }
 
 function buUnwrapEnvelope(string $raw): string
 {
     $tree = buBerTree($raw);
     $content = buFindOctetString($tree);
-    if ($content === null) throw new RuntimeException('O envelope não contém payload BU ASN.1.');
+    if ($content === null) throw new RuntimeException('BU envelope has no ASN.1 payload.');
     return $content;
 }
 

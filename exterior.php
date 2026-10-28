@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f4f7f5"><title>Vota&ccedil;&atilde;o do exterior no segundo turno</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+  :root{--ink:#132b36;--muted:#71818a;--green:#16785e;--line:#e4ebe7;--bg:#f4f7f5}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif}.top{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5vw}.brand{color:var(--ink);text-decoration:none;font:800 16px Manrope}.brand small{display:block;color:var(--muted);font:500 10px 'DM Sans';letter-spacing:.08em;text-transform:uppercase}.shell{max-width:1440px;margin:auto;padding:28px 5vw 50px}.city-nav{display:flex;gap:8px;overflow:auto;padding:0 0 24px}.city-nav a{white-space:nowrap;background:#fff;border:1px solid var(--line);border-radius:9px;color:#455a60;padding:9px 13px;font-size:12px;font-weight:600;text-decoration:none}.city-nav a.active,.city-nav a:hover{background:var(--ink);border-color:var(--ink);color:#fff}.eyebrow{font-size:11px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;color:var(--green)}h1{font:800 clamp(27px,3vw,39px) Manrope;letter-spacing:-1.2px;margin:8px 0}.intro{color:var(--muted);font-size:14px;margin:0 0 22px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:820px}th,td{text-align:left;padding:14px 16px;border-bottom:1px solid #edf1ed;font-size:12px}th{background:#f7faf7;color:#52665d;font-size:10px;letter-spacing:.04em;text-transform:uppercase}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}tbody tr:last-child td{border-bottom:0}tbody td:first-child{font-weight:700}.status{padding:18px;color:var(--muted);font-size:12px}.source{font-size:10px;line-height:1.6;color:#879398;margin-top:14px}@media(max-width:560px){.top{height:62px;padding:0 4vw}.shell{padding:20px 4vw 35px}}
+  </style>
+</head>
+<body>
+<header class="top"><a class="brand" href="index.php">territ&oacute;rio pe<small>intelig&ecirc;ncia geogr&aacute;fica</small></a></header>
+<main class="shell">
+  <nav class="city-nav" aria-label="Menu principal">
+    <a href="index.php?cidade=Igarassu">Igarassu</a><a href="index.php?cidade=Itapissuma">Itapissuma</a><a href="index.php?cidade=Abreu%20e%20Lima">Abreu e Lima</a><a href="index.php?cidade=Paulista">Paulista</a><a href="index.php?cidade=Olinda">Olinda</a><a href="index.php?cidade=Recife">Recife</a><a href="index.php?cidade=Jaboat%C3%A3o%20dos%20Guararapes">Jaboat&atilde;o dos Guararapes</a><a href="index.php?cidade=Camaragibe">Camaragibe</a><a href="index.php?cidade=Santa%20Cruz%20do%20Capibaribe">Santa Cruz do Capibaribe</a><a href="index.php?cidade=Toritama">Toritama</a><a href="index.php?cidade=Cabo%20de%20Santo%20Agostinho">Cabo de Santo Agostinho</a><a href="index.php?cidade=Ipojuca">Ipojuca</a><a href="index.php?cidade=Caruaru">Caruaru</a><a href="index.php?cidade=Goiana">Goiana</a><a href="index.php?cidade=S%C3%A3o%20Louren%C3%A7o%20da%20Mata">S&atilde;o Louren&ccedil;o da Mata</a><a href="index.php?cidade=Jap%C3%A3o">Jap&atilde;o</a><a href="index.php?cidade=Pernambuco">Pernambuco</a><a class="active" href="exterior.php" aria-current="page">Exterior</a>
+  </nav>
+  <div class="eyebrow">Apura&ccedil;&atilde;o presidencial &middot; TSE</div>
+  <h1>Vota&ccedil;&atilde;o do exterior no segundo turno</h1>
+  <p class="intro">Resultados por pa&iacute;s, com sess&otilde;es eleitorais, votos de Lula e Fl&aacute;vio e percentual de votos brancos e nulos.</p>
+  <section class="card" aria-label="Resultados eleitorais do exterior"><div id="status" class="status" role="status">Carregando resultados oficiais do segundo turno&hellip;</div><div class="table-wrap"><table hidden id="results"><thead><tr><th>Pa&iacute;s</th><th class="num">Sess&otilde;es eleitorais</th><th class="num">Votos Lula</th><th class="num">Votos Fl&aacute;vio</th><th class="num">Brancos e nulos</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+  <p class="source">Fonte: TSE &middot; elei&ccedil;&atilde;o presidencial &middot; segundo turno de 2026. O percentual de brancos e nulos &eacute; calculado sobre os votos apurados.</p>
+</main>
+<script>
+const statusEl=document.getElementById('status'),table=document.getElementById('results'),body=document.getElementById('rows');
+const number=value=>Number(value||0).toLocaleString('pt-BR');
+fetch('dados_mapa.php?exterior=1',{headers:{Accept:'application/json'}}).then(async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error||'N&atilde;o foi poss&iacute;vel carregar os resultados.');const countries=data.countries||[];if(!countries.length){statusEl.textContent='Ainda n&atilde;o h&aacute; resultados oficiais do segundo turno do exterior dispon&iacute;veis no TSE.';return;}for(const row of countries){const tr=document.createElement('tr');const country=document.createElement('td');country.textContent=row.country;tr.appendChild(country);for(const value of [row.sessions,row.lula,row.flavio]){const td=document.createElement('td');td.className='num';td.textContent=number(value);tr.appendChild(td)}const percent=document.createElement('td');percent.className='num';percent.textContent=row.blank_null_percent===null?'—':Number(row.blank_null_percent).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';tr.appendChild(percent);body.appendChild(tr)}statusEl.hidden=true;table.hidden=false;}).catch(error=>{statusEl.textContent=error.message});
+</script>
+</body>
+</html>

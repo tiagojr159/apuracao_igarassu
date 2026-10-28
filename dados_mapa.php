@@ -53,10 +53,10 @@ function tse2026Bytes(string $url): ?string
     return $body;
 }
 
-function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, int $officeCode, int $candidateNumber, int $offset, int $limit, int $localFilter = 0, int $zoneFilter = 0): array
+function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, int $officeCode, int $candidateNumber, int $offset, int $limit, int $localFilter = 0, int $zoneFilter = 0, int $turn = 1): array
 {
     require_once __DIR__ . '/bu_asn.php';
-    $pleitoPath = '3220'; $pleitoFile = '003220'; $municipalityCode = str_pad($municipalityCode, 5, '0', STR_PAD_LEFT);
+    $pleitoPath = $turn === 2 ? '3221' : '3220'; $pleitoFile = str_pad($pleitoPath, 6, '0', STR_PAD_LEFT); $municipalityCode = str_pad($municipalityCode, 5, '0', STR_PAD_LEFT);
     $places = [];
     $mapFile = __DIR__ . '/data/map_layers.json';
     if (is_file($mapFile)) {
@@ -74,12 +74,12 @@ function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, 
         if ((string) ($mu['cd'] ?? '') !== $municipalityCode) continue;
         foreach (($mu['zon'] ?? []) as $zone) foreach (($zone['sec'] ?? []) as $section) $sections[] = ['zone' => (string) ($zone['cd'] ?? ''), 'section' => (string) ($section['ns'] ?? ''), 'data' => $section];
     }
-    $indexFile = __DIR__ . '/data/cache_tse_2026/section-index-' . $municipalityCode . '-' . $ibgeCode . '.json';
+    $indexFile = __DIR__ . '/data/cache_tse_2026/section-index-' . $municipalityCode . '-' . $ibgeCode . '-t' . ($turn === 2 ? '2' : '1') . '.json';
     $configHash = hash('sha256', json_encode($config['abr'] ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-    $sectionIndex = null; $storedIndex = null;
+    $sectionIndex = null; $storedIndex = null; $indexVersion = 2;
     if ($localFilter > 0) {
         $storedIndex = is_file($indexFile) ? json_decode((string) file_get_contents($indexFile), true) : null;
-        if (!is_array($storedIndex) || ($storedIndex['config_hash'] ?? '') !== $configHash) $storedIndex = ['config_hash' => $configHash, 'complete' => false, 'places' => []];
+        if (!is_array($storedIndex) || ($storedIndex['config_hash'] ?? '') !== $configHash || (int) ($storedIndex['version'] ?? 0) !== $indexVersion) $storedIndex = ['config_hash' => $configHash, 'version' => $indexVersion, 'complete' => false, 'places' => []];
         if ($storedIndex['complete'] ?? false) $sectionIndex = $storedIndex['places'] ?? [];
     }
     if ($sectionIndex !== null) {
@@ -113,7 +113,7 @@ function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, 
             foreach ($decodedVotes as $vote) {
                 if ($candidateNumber === 0 && $localFilter > 0) {
                     if ((int) $vote['office_code'] === $officeCode) $attendance = ['eligible' => (int) $vote['eligible'], 'attended' => (int) $vote['attended']];
-                    if ($vote['vote_type'] === 'NOMINAL' || $vote['vote_type'] === 'NULO') $candidateVotes[] = ['office_code' => (int) $vote['office_code'], 'number' => (string) ($vote['number'] ?? ''), 'vote_type' => $vote['vote_type'], 'votes' => (int) $vote['votes']];
+                    if (in_array($vote['vote_type'], ['NOMINAL', 'NULO', 'BRANCO', 'LEGENDA'], true)) $candidateVotes[] = ['office_code' => (int) $vote['office_code'], 'number' => (string) ($vote['number'] ?? ''), 'vote_type' => $vote['vote_type'], 'votes' => (int) $vote['votes']];
                 } elseif ($vote['vote_type'] === 'NOMINAL' && (int) $vote['office_code'] === $officeCode && (int) $vote['number'] === $candidateNumber) $votes += (int) $vote['votes'];
             }
             $place = $places[$identity['zone'] . ':' . $identity['local']] ?? null;
@@ -130,6 +130,56 @@ function tse2026SectionsByCandidate(string $municipalityCode, string $ibgeCode, 
         @file_put_contents($indexFile, json_encode($storedIndex, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
     return ['sections' => $rows, 'total_sections' => $total, 'next_offset' => $offset + count($slice), 'done' => $offset + count($slice) >= $total];
+}
+
+function tse2026PollingSectionsSummary(string $municipalityCode, string $ibgeCode, int $offset, int $limit, int $turn = 1): array
+{
+    require_once __DIR__ . '/bu_asn.php';
+    $municipalityCode = str_pad($municipalityCode, 5, '0', STR_PAD_LEFT);
+    $mapData = json_decode((string) file_get_contents(__DIR__ . '/data/map_layers.json'), true);
+    $places = [];
+    foreach (($mapData['cities'][$ibgeCode]['places'] ?? []) as $place) $places[(string) ($place['zone'] ?? '') . ':' . (string) ($place['local'] ?? '')] = $place;
+    $prefix = 'https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/';
+    $pleitoPath = $turn === 2 ? '3221' : '3220';
+    $pleitoFile = str_pad($pleitoPath, 6, '0', STR_PAD_LEFT);
+    $config = tse2026Json($prefix . $pleitoPath . '/config/pe/pe-p' . $pleitoFile . '-cs.json');
+    if (!$config) throw new RuntimeException('O TSE não forneceu a lista de seções eleitorais.');
+    $sections = [];
+    foreach (($config['abr'] ?? []) as $uf) if (($uf['cd'] ?? '') === 'pe') foreach (($uf['mu'] ?? []) as $mu) {
+        if ((string) ($mu['cd'] ?? '') !== $municipalityCode) continue;
+        foreach (($mu['zon'] ?? []) as $zone) foreach (($zone['sec'] ?? []) as $section) {
+            if (!empty($section['nsp'])) continue;
+            $sections[] = ['zone' => (string) ($zone['cd'] ?? ''), 'section' => (string) ($section['ns'] ?? '')];
+        }
+    }
+    usort($sections, static fn(array $a, array $b): int => strnatcmp($a['zone'] . ':' . $a['section'], $b['zone'] . ':' . $b['section']));
+    $total = count($sections); $rows = [];
+    foreach (array_slice($sections, $offset, $limit) as $item) {
+        $zone = str_pad($item['zone'], 4, '0', STR_PAD_LEFT); $section = str_pad($item['section'], 4, '0', STR_PAD_LEFT);
+        $aux = tse2026Json($prefix . $pleitoPath . '/dados/pe/' . $municipalityCode . '/' . $zone . '/' . $section . '/p' . $pleitoFile . '-pe-m' . $municipalityCode . '-z' . $zone . '-s' . $section . '-aux.json');
+        $selected = null;
+        foreach (($aux['hashes'] ?? []) as $hash) if (($hash['st'] ?? '') === 'Totalizado') $selected = $hash;
+        $buFile = null;
+        foreach (($selected['arq'] ?? []) as $file) if (($file['tp'] ?? '') === 'bu' || preg_match('/-bu\.(dat|bu)$/i', (string) ($file['nm'] ?? ''))) { $buFile = (string) $file['nm']; break; }
+        if (!$selected || $buFile === null) { $rows[] = ['zone' => $zone, 'section' => $section, 'pending' => true]; continue; }
+        $url = $prefix . $pleitoPath . '/dados/pe/' . $municipalityCode . '/' . $zone . '/' . $section . '/' . rawurlencode((string) $selected['hash']) . '/' . rawurlencode($buFile);
+        try {
+            $raw = tse2026Bytes($url); if ($raw === null) throw new RuntimeException('BU indisponível.');
+            $identity = buDecodeSectionIdentity($raw); $place = $places[$identity['zone'] . ':' . $identity['local']] ?? [];
+            $metrics = ['eligible' => null, 'valid' => 0, 'white' => 0, 'null' => 0, 'abstentions' => null, 'numbers' => []];
+            foreach (buDecodeVotes($raw) as $vote) {
+                if ((int) $vote['office_code'] !== 1) continue;
+                if ($vote['vote_type'] === 'ATTENDANCE') { $metrics['eligible'] = (int) $vote['eligible']; $metrics['abstentions'] = max(0, (int) $vote['eligible'] - (int) $vote['attended']); }
+                elseif ($vote['vote_type'] === 'NOMINAL') { $n = (string) ($vote['number'] ?? ''); $metrics['valid'] += (int) $vote['votes']; $metrics['numbers'][$n] = ($metrics['numbers'][$n] ?? 0) + (int) $vote['votes']; }
+                elseif ($vote['vote_type'] === 'LEGENDA') $metrics['valid'] += (int) $vote['votes'];
+                elseif ($vote['vote_type'] === 'BRANCO') $metrics['white'] += (int) $vote['votes'];
+                elseif ($vote['vote_type'] === 'NULO') $metrics['null'] += (int) $vote['votes'];
+            }
+            ksort($metrics['numbers'], SORT_NATURAL);
+            $rows[] = ['place' => (string) ($place['name'] ?? ('Local de votação ' . $identity['local'])), 'neighborhood' => (string) ($place['neighborhood'] ?? ''), 'zone' => $zone, 'section' => $section] + $metrics;
+        } catch (Throwable $error) { $rows[] = ['zone' => $zone, 'section' => $section, 'pending' => true]; }
+    }
+    return ['recordsTotal' => $total, 'recordsFiltered' => $total, 'data' => $rows];
 }
 
 function tse2026Candidates(array $data): array
@@ -158,9 +208,11 @@ function tse2026File(string $scope, string $municipality, string $office, string
     return tse2026Json($url);
 }
 
-function tse2026TotalsForMunicipality(string $ibgeCode): array
+function tse2026TotalsForMunicipality(string $ibgeCode, int $turn = 1): array
 {
-    $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/6259/config/mun-e006259-cm.json');
+    $turn = $turn === 2 ? 2 : 1;
+    $electionId = $turn === 2 ? '006258' : '006259';
+    $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/' . (int) $electionId . '/config/mun-e' . $electionId . '-cm.json');
     $municipality = null;
     foreach (($config['abr'] ?? []) as $state) {
         if (($state['cd'] ?? '') !== 'pe') continue;
@@ -168,15 +220,15 @@ function tse2026TotalsForMunicipality(string $ibgeCode): array
             if (($item['cdi'] ?? '') === $ibgeCode) { $municipality = $item; break 2; }
         }
     }
-    if (!$municipality) return ['year' => 2026, 'turn' => 1, 'source' => 'TSE', 'available' => false, 'sections' => 0, 'sectionsTotalized' => 0, 'offices' => []];
+    if (!$municipality) return ['year' => 2026, 'turn' => $turn, 'source' => 'TSE', 'available' => false, 'sections' => 0, 'sectionsTotalized' => 0, 'offices' => []];
     $code = (string) $municipality['cd'];
-    $offices = ['governador' => ['0003', '006259'], 'senador' => ['0005', '006259'], 'federal' => ['0006', '006259'], 'estadual' => ['0007', '006259'], 'presidente' => ['0001', '006257']];
-    $totals = ['year' => 2026, 'turn' => 1, 'source' => 'TSE', 'available' => true, 'sections' => 0, 'sectionsTotalized' => 0, 'offices' => []];
+    $offices = $turn === 2 ? ['presidente' => ['0001', '006258']] : ['governador' => ['0003', '006259'], 'senador' => ['0005', '006259'], 'federal' => ['0006', '006259'], 'estadual' => ['0007', '006259'], 'presidente' => ['0001', '006257']];
+    $totals = ['year' => 2026, 'turn' => $turn, 'source' => 'TSE', 'available' => true, 'sections' => 0, 'sectionsTotalized' => 0, 'offices' => []];
     foreach ($offices as $key => [$officeCode, $electionId]) {
         $result = tse2026File('pe', $code, $officeCode, $electionId);
         if (!$result) continue;
-        // Nunca mostre um payload de outro ciclo eleitoral como se fosse 2026.
-        if ((string) ($result['ele'] ?? '') !== '6259') continue;
+        // Preserve o identificador do pleito de cada cargo; presidente usa 6257.
+        if ((string) ($result['ele'] ?? '') !== ltrim($electionId, '0')) continue;
         $totals['sections'] = max($totals['sections'], (int) ($result['s']['ts'] ?? 0));
         $totals['sectionsTotalized'] = max($totals['sectionsTotalized'], (int) ($result['s']['st'] ?? 0));
         $candidates = tse2026Candidates($result);
@@ -233,6 +285,40 @@ function tse2026JapanTotals(): array
     return $totals;
 }
 
+function tse2026ExteriorCountries(): array
+{
+    $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/6258/config/mun-e006258-cm.json');
+    $rows = [];
+    foreach (($config['abr'] ?? []) as $scope) {
+        if (($scope['cd'] ?? '') !== 'zz') continue;
+        foreach (($scope['mu'] ?? []) as $item) {
+            $country = trim((string) ($item['pais'] ?? $item['pa'] ?? $item['nm_pais'] ?? $item['country'] ?? ''));
+            if ($country === '') $country = trim((string) ($item['nm'] ?? ''));
+            if ($country === '') continue;
+            $result = tse2026File('zz', (string) ($item['cd'] ?? ''), '0001', '006258');
+            if (!$result || (string) ($result['ele'] ?? '') !== '6258') continue;
+            $key = mb_strtolower($country, 'UTF-8');
+            if (!isset($rows[$key])) $rows[$key] = ['country' => $country, 'sessions' => 0, 'lula' => 0, 'flavio' => 0, 'white' => 0, 'null' => 0, 'valid' => 0];
+            $rows[$key]['sessions'] += (int) ($result['s']['ts'] ?? 0);
+            foreach (tse2026Candidates($result) as $candidate) {
+                $name = mb_strtolower($candidate['name'], 'UTF-8');
+                if (strpos($name, 'lula') !== false) $rows[$key]['lula'] += (int) $candidate['votes'];
+                if (strpos($name, 'flavio') !== false || strpos($name, 'flávio') !== false) $rows[$key]['flavio'] += (int) $candidate['votes'];
+            }
+            $rows[$key]['white'] += (int) ($result['votosBrancos'] ?? $result['vb'] ?? $result['vbr'] ?? $result['s']['vb'] ?? 0);
+            $rows[$key]['null'] += (int) ($result['votosNulos'] ?? $result['vn'] ?? $result['s']['vn'] ?? 0);
+            $rows[$key]['valid'] += (int) ($result['votosValidos'] ?? $result['vv'] ?? $result['s']['vv'] ?? 0);
+        }
+    }
+    foreach ($rows as &$row) {
+        $total = $row['white'] + $row['null'] + $row['valid'];
+        $row['blank_null_percent'] = $total > 0 ? round(($row['white'] + $row['null']) * 100 / $total, 2) : null;
+    }
+    unset($row);
+    usort($rows, static fn(array $a, array $b): int => strnatcasecmp($a['country'], $b['country']));
+    return array_values($rows);
+}
+
 $cityCodes = [
     'Igarassu' => '2606804',
     'Itapissuma' => '2607752',
@@ -254,6 +340,18 @@ $consultationOffices = ['estadual' => ['0007', '006259'], 'federal' => ['0006', 
 if (isset($_GET['consulta'])) {
     $action = (string) $_GET['consulta'];
     $office = (string) ($_GET['cargo'] ?? '');
+    if ($action === 'municipio-secoes') {
+        $cityName = (string) ($_GET['cidade'] ?? ''); $ibge = $cityCodes[$cityName] ?? '';
+        if ($ibge === '') { http_response_code(400); echo json_encode(['error' => 'Municipio invalido.']); exit; }
+        $municipalityCode = '';
+        $config = tse2026Json('https://resultados.tse.jus.br/oficial/ele2026/6259/config/mun-e006259-cm.json');
+        foreach (($config['abr'] ?? []) as $state) if (($state['cd'] ?? '') === 'pe') foreach (($state['mu'] ?? []) as $mu) if ((string) ($mu['cdi'] ?? '') === $ibge) $municipalityCode = (string) ($mu['cd'] ?? '');
+        if ($municipalityCode === '') { http_response_code(404); echo json_encode(['error' => 'Codigo do municipio nao encontrado no TSE.']); exit; }
+        try {
+            $result = tse2026PollingSectionsSummary($municipalityCode, $ibge, max(0, (int) ($_GET['start'] ?? 0)), min(100, max(1, (int) ($_GET['length'] ?? 25))), (int) ($_GET['turno'] ?? 1) === 2 ? 2 : 1);
+            echo json_encode(['draw' => max(0, (int) ($_GET['draw'] ?? 0))] + $result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
+        } catch (Throwable $error) { http_response_code(502); echo json_encode(['error' => $error->getMessage()], JSON_UNESCAPED_UNICODE); exit; }
+    }
     if (!isset($consultationOffices[$office])) { http_response_code(400); echo json_encode(['error' => 'Cargo inválido.']); exit; }
     if ($action === 'colegio-secoes') {
         $cityName = (string) ($_GET['cidade'] ?? ''); $local = (int) ($_GET['local'] ?? 0); $zone = (int) ($_GET['zona'] ?? 0); $ibge = $cityCodes[$cityName] ?? '';
@@ -263,7 +361,7 @@ if (isset($_GET['consulta'])) {
         foreach (($config['abr'] ?? []) as $state) if (($state['cd'] ?? '') === 'pe') foreach (($state['mu'] ?? []) as $mu) if ((string) ($mu['cdi'] ?? '') === $ibge) $municipalityCode = (string) ($mu['cd'] ?? '');
         if ($municipalityCode === '') { http_response_code(404); echo json_encode(['error' => 'Código do município não encontrado no TSE.']); exit; }
         try {
-            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, (int) $consultationOffices[$office][0], 0, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))), $local, $zone);
+            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, (int) $consultationOffices[$office][0], 0, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))), $local, $zone, (int) ($_GET['turno'] ?? 1) === 2 ? 2 : 1);
             echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
         } catch (Throwable $error) { http_response_code(502); echo json_encode(['error' => $error->getMessage()], JSON_UNESCAPED_UNICODE); exit; }
     }
@@ -276,7 +374,7 @@ if (isset($_GET['consulta'])) {
         foreach (($config['abr'] ?? []) as $state) if (($state['cd'] ?? '') === 'pe') foreach (($state['mu'] ?? []) as $mu) if ((string) ($mu['cdi'] ?? '') === $ibge) $municipalityCode = (string) ($mu['cd'] ?? '');
         if ($municipalityCode === '') { http_response_code(404); echo json_encode(['error' => 'Código do município não encontrado no TSE.']); exit; }
         try {
-            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, (int) $consultationOffices[$office][0], $candidateNumber, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))));
+            $result = tse2026SectionsByCandidate($municipalityCode, $ibge, (int) $consultationOffices[$office][0], $candidateNumber, max(0, (int) ($_GET['offset'] ?? 0)), min(20, max(1, (int) ($_GET['limit'] ?? 12))), 0, 0, (int) ($_GET['turno'] ?? 1) === 2 ? 2 : 1);
             echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); exit;
         } catch (Throwable $error) { http_response_code(502); echo json_encode(['error' => $error->getMessage()], JSON_UNESCAPED_UNICODE); exit; }
     }
@@ -309,6 +407,11 @@ if (isset($_GET['consulta'])) {
     http_response_code(400); echo json_encode(['error' => 'Consulta inválida.']); exit;
 }
 $city = isset($_GET['cidade']) ? (string) $_GET['cidade'] : 'Igarassu';
+if (isset($_GET['exterior'])) {
+    try { echo json_encode(['turn' => 2, 'year' => 2026, 'source' => 'TSE', 'countries' => tse2026ExteriorCountries()], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR); }
+    catch (Throwable $error) { http_response_code(502); echo json_encode(['error' => $error->getMessage()], JSON_UNESCAPED_UNICODE); }
+    exit;
+}
 $file = __DIR__ . '/data/map_layers.json';
 if (!is_file($file) || !is_readable($file)) {
     http_response_code(503);
@@ -320,7 +423,8 @@ try {
     $base = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
     if (isset($_GET['eleicao2026'])) {
         $liveCity = isset($_GET['cidade']) ? (string) $_GET['cidade'] : 'Igarassu';
-        $liveTotals = $liveCity === 'Japão' ? tse2026JapanTotals() : (isset($cityCodes[$liveCity]) ? tse2026TotalsForMunicipality($cityCodes[$liveCity]) : null);
+        $requestedTurn = (int) ($_GET['turno'] ?? 1) === 2 ? 2 : 1;
+        $liveTotals = $liveCity === 'Japão' ? tse2026JapanTotals() : (isset($cityCodes[$liveCity]) ? tse2026TotalsForMunicipality($cityCodes[$liveCity], $requestedTurn) : null);
         if ($liveTotals === null) { http_response_code(404); echo json_encode(['error' => 'Município não encontrado.']); exit; }
         echo json_encode(['city' => $liveCity, 'electionTotals' => $liveTotals], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         exit;
